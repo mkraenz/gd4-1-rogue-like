@@ -41,6 +41,7 @@ func can_move(from: Vector2, to: Vector2, entity: CollisionObject2D) -> bool:
 	return not is_colliding(to, entity)
 
 func is_colliding(at: Vector2, entity: CollisionObject2D) -> bool:
+	update_cell(at)
 	for entity_at_target_cell in grid[at]:
 		# don't collide with yourself
 		if entity_at_target_cell == entity:
@@ -136,9 +137,6 @@ func update_disabled_astar_points(astar: AStar2D, entity: Node2D) -> void:
 		for y in range(height):
 			if astar.has_point(get_id(x,y)):
 				var disabled = is_colliding(Vector2(x,y), entity)
-				if disabled:
-					printt("disabled", x, y, disabled)
-
 				astar.set_point_disabled(get_id(x,y), false)
 				astar.set_point_disabled(get_id(x,y), disabled)
 

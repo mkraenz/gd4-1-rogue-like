@@ -42,6 +42,10 @@ func act() -> void:
 		var target_id = Board.get_id(player_coords.x,player_coords.y)
 
 		path = astar.get_point_path(id, target_id)
+		if len(path) == 0:
+			Eventbus.emit_turn_ended()
+			return
+
 		var from = Grid.to_board_vec(global_position)
 		var to = path[1]
 

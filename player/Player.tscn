@@ -27,6 +27,8 @@ shape = ExtResource("3_f4svf")
 collision_mask = 576
 
 [node name="Stats" parent="." instance=ExtResource("4_gnlds")]
+max_health = 20
+health = 20
 
 [node name="InputCooldown" type="Timer" parent="."]
 wait_time = 0.1

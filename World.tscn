@@ -19,6 +19,21 @@ position = Vector2(112, 32)
 [node name="Goblin2" parent="." instance=ExtResource("4_abnwl")]
 position = Vector2(128, 32)
 
+[node name="Goblin3" parent="." instance=ExtResource("4_abnwl")]
+position = Vector2(128, 32)
+
+[node name="Goblin5" parent="." instance=ExtResource("4_abnwl")]
+position = Vector2(128, 16)
+
+[node name="Goblin6" parent="." instance=ExtResource("4_abnwl")]
+position = Vector2(144, 16)
+
+[node name="Goblin7" parent="." instance=ExtResource("4_abnwl")]
+position = Vector2(144, 0)
+
+[node name="Goblin4" parent="." instance=ExtResource("4_abnwl")]
+position = Vector2(144, 32)
+
 [node name="Wall" parent="." instance=ExtResource("4_gp4h0")]
 position = Vector2(80, 48)
 
