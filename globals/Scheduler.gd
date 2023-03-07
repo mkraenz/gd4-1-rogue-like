@@ -6,6 +6,7 @@ extends Node
 var _actors: Array[Node] = []
 var _current_index := 0
 var total_turn = 0
+var has_ended = false
 
 # Note: for whatever reason, using a getter does not work
 func _current_actor():
@@ -19,12 +20,19 @@ func init_actors() -> void:
 	_actors.append_array(players)
 	_actors.append_array(npcs)
 	_actors.append_array(enemies)
-	Fp.foreach(_actors, func(actor: Node): return actor.connect("has_died", self._on_actor_has_died))
+	eventbus.connect('entity_died', _on_actor_died)
+	eventbus.connect('player_died', _on_player_died)
+	
 	prints("Actors initialized: ", len(_actors))
 
 	eventbus.connect("turn_ended", end_turn)
 
-func _on_actor_has_died(actor: Node) -> void:
+func _on_player_died() -> void:
+	prints("Player died. Game over.")
+	has_ended = true
+
+func _on_actor_died(actor: Node) -> void:
+	print("Actor has died: ", actor.name)
 	_actors.erase(actor)
 
 func start_game() -> void:
@@ -35,6 +43,7 @@ func start_game() -> void:
 	end_turn() # from here on, actors will run sequentially
 
 func end_turn() -> void:
+	if has_ended: return
 	# prints(_current_actor().name, ": End turn.")
 	_goto_next()
 	# prints(_current_actor().name, ": Start turn.")

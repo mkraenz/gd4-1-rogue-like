@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://World.gd" id="1_3ig6h"]
 [ext_resource type="PackedScene" uid="uid://cbpw4radoiuo8" path="res://player/Player.tscn" id="2_7mma5"]
-[ext_resource type="PackedScene" uid="uid://cnhjoohe4bevi" path="res://enemies/Goblin.tscn" id="4_abnwl"]
+[ext_resource type="PackedScene" uid="uid://djyfppb6xhsvy" path="res://enemies/Goblin.tscn" id="4_abnwl"]
 [ext_resource type="PackedScene" uid="uid://8vp2orcucyjq" path="res://world/Wall.tscn" id="4_gp4h0"]
 
 [node name="World" type="Node2D"]
@@ -20,7 +20,6 @@ position = Vector2(80, 48)
 
 [node name="Wall2" parent="." instance=ExtResource("4_gp4h0")]
 position = Vector2(80, 32)
-collision_mask = 0
 
 [node name="Wall3" parent="." instance=ExtResource("4_gp4h0")]
 position = Vector2(80, 16)

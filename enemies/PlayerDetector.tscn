@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://bl0vdo8ikbpb"]
+
+[ext_resource type="Script" path="res://enemies/PlayerDetector.gd" id="1_0o7do"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hb7f2"]
+size = Vector2(128, 128)
+
+[node name="PlayerDetector" type="Area2D"]
+collision_layer = 0
+collision_mask = 12
+script = ExtResource("1_0o7do")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_hb7f2")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

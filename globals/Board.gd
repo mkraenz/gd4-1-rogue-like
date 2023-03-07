@@ -60,6 +60,25 @@ func get_colliders(at: Vector2, entity: CollisionObject2D) -> Array:
 			colliders.append(entity_at_target_cell)
 	return colliders
 
+func get_hit_colliders(at: Vector2, entity: CollisionObject2D) -> Array:
+	update_cell(at)
+
+	var colliders = []
+	if not entity.has_node("HitDetector"):
+		prints(entity.name, 'does not have a HitDetector node')
+		return colliders
+	var hit_detector = entity.get_node("HitDetector")
+	for entity_at_target_cell in grid[at]:
+		if entity_at_target_cell.has_node("Hurtbox"):
+			var hurtbox = entity_at_target_cell.get_node("Hurtbox")
+			var is_hit = hit_detector.collision_mask & hurtbox.collision_layer
+			if is_hit:
+				colliders.append(entity_at_target_cell)
+		else:
+			prints(entity_at_target_cell.name, ' does not have a Hurtbox node')
+	return colliders
+
+
 func reset() -> void:
 	pass # TODO implement
 
@@ -96,9 +115,6 @@ func get_astar(entity: CollisionObject2D) -> AStar2D:
 	# disable where entity would collide with something (e.g. enemy, wall)
 	for x in range(width):
 		for y in range(height):
-			if x == 5 and y == 1:
-				var cell = grid[Vector2(x,y)]
-				printt(cell, cell[0].collision_layer, entity.collision_mask)
 			if is_colliding(Vector2(x,y), entity):
 				astar.set_point_disabled(get_id(x,y))
 	return astar

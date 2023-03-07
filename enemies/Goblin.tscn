@@ -1,9 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://cnhjoohe4bevi"]
+[gd_scene load_steps=9 format=3 uid="uid://djyfppb6xhsvy"]
 
 [ext_resource type="Texture2D" uid="uid://dqwpame4riq1p" path="res://third-party/kenney-one-bit-pack/colored-transparent.png" id="1_4ebiq"]
 [ext_resource type="Script" path="res://enemies/Goblin.gd" id="1_46fyr"]
 [ext_resource type="PackedScene" uid="uid://cqj1wpy2bw7cw" path="res://common/HitDetector.tscn" id="2_atc5h"]
 [ext_resource type="PackedScene" uid="uid://dqn0e0p0a5e6p" path="res://common/Stats.tscn" id="3_rsxu8"]
+[ext_resource type="PackedScene" uid="uid://bl0vdo8ikbpb" path="res://enemies/PlayerDetector.tscn" id="5_7lcli"]
+[ext_resource type="PackedScene" uid="uid://7kgusepjyr38" path="res://common/Hurtbox.tscn" id="6_mj7nf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ory34"]
 atlas = ExtResource("1_4ebiq")
@@ -13,7 +15,8 @@ region = Rect2(408, 84, 16, 17)
 size = Vector2(16, 16)
 
 [node name="Goblin" type="CharacterBody2D" groups=["enemies"]]
-collision_layer = 17
+collision_layer = 2
+collision_mask = 16
 script = ExtResource("1_46fyr")
 
 [node name="Sprite" type="Sprite2D" parent="."]
@@ -23,5 +26,11 @@ texture = SubResource("AtlasTexture_ory34")
 shape = SubResource("RectangleShape2D_cqyhf")
 
 [node name="HitDetector" parent="." instance=ExtResource("2_atc5h")]
+collision_mask = 896
 
 [node name="Stats" parent="." instance=ExtResource("3_rsxu8")]
+
+[node name="PlayerDetector" parent="." instance=ExtResource("5_7lcli")]
+
+[node name="Hurtbox" parent="." instance=ExtResource("6_mj7nf")]
+collision_layer = 64

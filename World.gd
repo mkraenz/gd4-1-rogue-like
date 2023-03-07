@@ -13,7 +13,7 @@ func _ready() -> void:
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
-		print('mouse pressed')
+		print('redrawing astar path')
 		queue_redraw()
 
 func _draw():

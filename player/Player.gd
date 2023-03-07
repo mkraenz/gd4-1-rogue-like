@@ -1,8 +1,6 @@
 class_name Player
 extends CharacterBody2D
 
-signal has_died(this: Node2D)
-
 const action_exhausting_inputs := ["left", "right", "up", "down", "wait"]
 
 @onready var hit_detector := $HitDetector
@@ -73,10 +71,12 @@ func attack(target: Node2D) -> void:
 func take_damage(damage: float) -> void:
 	print('player got hit')
 	stats.health -= damage
-	has_died.emit(self)
-
+	
 func _on_no_health() -> void:
-	queue_free()
+	Eventbus.emit_entity_died(self)
+	Eventbus.emit_player_died()
+	print('player would have died')
+	# queue_free()
 	
 
 func get_board_coord() -> Vector2:

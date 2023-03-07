@@ -1,17 +1,19 @@
-[gd_scene load_steps=7 format=3 uid="uid://cbpw4radoiuo8"]
+[gd_scene load_steps=8 format=3 uid="uid://cbpw4radoiuo8"]
 
 [ext_resource type="Script" path="res://player/Player.gd" id="1_6lpyc"]
 [ext_resource type="Texture2D" uid="uid://dqwpame4riq1p" path="res://third-party/kenney-one-bit-pack/colored-transparent.png" id="1_wxqeu"]
 [ext_resource type="Shape2D" uid="uid://ci386wxd804mi" path="res://common/RectCollisionShape.tres" id="3_f4svf"]
 [ext_resource type="PackedScene" uid="uid://dqn0e0p0a5e6p" path="res://common/Stats.tscn" id="4_gnlds"]
 [ext_resource type="PackedScene" uid="uid://cqj1wpy2bw7cw" path="res://common/HitDetector.tscn" id="4_lqn6n"]
+[ext_resource type="PackedScene" uid="uid://7kgusepjyr38" path="res://common/Hurtbox.tscn" id="6_qibc7"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hbmor"]
 atlas = ExtResource("1_wxqeu")
 region = Rect2(476, 0, 16, 16)
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
-collision_layer = 4
+collision_layer = 8
+collision_mask = 1042
 motion_mode = 1
 script = ExtResource("1_6lpyc")
 
@@ -22,10 +24,13 @@ texture = SubResource("AtlasTexture_hbmor")
 shape = ExtResource("3_f4svf")
 
 [node name="HitDetector" parent="." instance=ExtResource("4_lqn6n")]
-collision_mask = 17
+collision_mask = 576
 
 [node name="Stats" parent="." instance=ExtResource("4_gnlds")]
 
 [node name="InputCooldown" type="Timer" parent="."]
 wait_time = 0.1
 one_shot = true
+
+[node name="Hurtbox" parent="." instance=ExtResource("6_qibc7")]
+collision_layer = 256
