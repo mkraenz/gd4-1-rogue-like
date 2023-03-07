@@ -1,66 +1,80 @@
 class_name Player
 extends CharacterBody2D
 
-signal acted
+signal has_died(this: Node2D)
 
-@onready var ray = $Ray
-@onready var stats= $Stats
+const action_exhausting_inputs := ["left", "right", "up", "down", "wait"]
 
-var speed := 10
-var attack_damage := 1
+@onready var hit_detector := $HitDetector
+@onready var stats := $Stats
+@onready var input_cooldown := $InputCooldown
 
-func _ready():
-	stats.connect("no_health", on_no_health)
+func add_to_board() -> void:
+	Board.add_from_world(global_position, self)
 
-func _unhandled_key_input(_event):
-	var vec := Input.get_vector("left", "right", "up", "down")
-	if vec != Vector2.ZERO:
-		set_process_unhandled_key_input(false) # make sure to stop the correct input handler
-		var direction = vec.normalized()
-		ray.target_position = direction * Grid.STEP_SIZE 
-		ray.force_raycast_update()
-		if ray.is_colliding():
-			print("colliding with: ", ray.get_collider())
-			var target = ray.get_collider()
-			if target is Enemy:
-				var attack_tween := attack(direction, target)
-				await attack_tween.finished
-				end_turn()
-				return
-			end_turn()
-			return
-
-		var moveTween := move(direction)
-		await moveTween.finished
-		end_turn()
-		# end turn called by move
-
-func move(direction: Vector2) -> Tween:
-	print('moving')
-
-	# position += direction * Grid.STEP_SIZE
-	var tween = create_tween()
-	tween.tween_property(self, "position",
-		direction * Grid.STEP_SIZE, 1.0 / speed).as_relative().set_trans(Tween.TRANS_SINE)
-	return tween
-
-func attack(direction: Vector2, target: Enemy) -> Tween:
-	var tween = create_tween()
-	var original_position := position
-	tween.tween_property(self, 'position', direction * Grid.STEP_SIZE / 2, 1.0 / speed).as_relative().set_trans(Tween.TRANS_CUBIC).set_delay(0.1)
-	tween.tween_property(self, 'position', original_position, 1.0 / speed)
-	target.take_damage(attack_damage)
-	return tween
+func _ready() -> void:
+	_wait_for_other_entities_turn(true)
+	var _a = stats.connect("no_health", _on_no_health)
+	add_to_board()
 
 func act() -> void:
-	set_process_unhandled_key_input(true)
+	_wait_for_other_entities_turn(false)
 
-func end_turn() -> void:
-	acted.emit()
+func _is_action_input(event: InputEvent) -> bool:
+	for action in action_exhausting_inputs:
+		if event.is_action_pressed(action):
+			return true 
+	return false
 
-func take_damage(damage: int) -> void:
+func _unhandled_key_input(event: InputEvent) -> void:
+	if not input_cooldown.is_stopped():
+		return # avoid that we receive many events from essentially a single button press
+
+	if not _is_action_input(event):
+		# since unhandled input triggers for any key press and even mouse movements, we need to ensure we only handle actual ingame actions
+		return
+
+	input_cooldown.start()
+	
+	var input_vec = Input.get_vector("left", "right", "up", "down")
+	# Since this algo does not quite work if input_vec is not a cardinal direction, we just limit it to the cardinals
+	if input_vec in [Vector2.RIGHT, Vector2.LEFT, Vector2.DOWN, Vector2.UP]:
+		var oned_input_vec = Vector2(round(input_vec.x), round(input_vec.y))
+
+		var from = Grid.to_board_vec(global_position)
+		var to = from + oned_input_vec
+
+		if Board.can_move(from, to, self):
+			# move
+			move(from, to)
+		else:
+			# attack if possible
+			var next_cell_rel = Grid.to_world_vec(oned_input_vec)
+			var colliders = hit_detector.get_colliders(next_cell_rel)
+			for collider in colliders:
+				attack(collider)
+
+	_wait_for_other_entities_turn(true)
+	Eventbus.emit_turn_ended()
+	
+func move(from: Vector2, to: Vector2) -> void:
+	Board.move(from, to, self)
+	global_position = Grid.to_world_vec(to)
+
+func _wait_for_other_entities_turn(is_waiting: bool) -> void:
+	set_process_unhandled_key_input(not is_waiting)
+
+func attack(target: Node2D) -> void:
+	if target.has_method("take_damage"):
+		target.take_damage(1.0)
+	else:
+		prints("WARNING:", target.name, "does not implement the take_damage(dmg) method!")
+
+func take_damage(damage: float) -> void:
+	print('player got hit')
 	stats.health -= damage
+	has_died.emit(self)
 
-func on_no_health() -> void:
-	print('Game Over. Player is dead.')
+func _on_no_health() -> void:
 	queue_free()
+	

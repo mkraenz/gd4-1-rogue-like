@@ -1,21 +1,29 @@
 extends Node
 
-signal health_changed(new_val)
-signal max_health_changed(new_val)
+signal health_changed(data: Dictionary)
+signal max_health_changed(data: Dictionary)
 signal no_health
 
-var max_health: int = 3:
+@export var max_health: int = 3:
 	get:
 		return max_health
-	set(value):
-		max_health = max(value, 1)
-		max_health_changed.emit(max_health)
+	set(val):
+		var is_unchanged = val == max_health
+		if is_unchanged:
+			return
+		var prev = max_health
+		max_health = max(val, 0)
+		max_health_changed.emit({"diff": max_health - prev })
 
-var health: int = 3:
+@export var health: int = 3:
 	get:
 		return health
-	set(value):
-		health = min(max(value, 0), max_health)
-		health_changed.emit(health)
+	set(val):
+		var is_unchanged = val == health
+		if is_unchanged:
+			return
+		var prev = health
+		health = min(val, max_health)
+		health_changed.emit({"diff": health - prev})
 		if health <= 0:
-			no_health.emit()
+			emit_signal("no_health")
