@@ -32,7 +32,6 @@ func _on_player_died() -> void:
 	has_ended = true
 
 func _on_actor_died(actor: Node) -> void:
-	print("Actor has died: ", actor.name)
 	_actors.erase(actor)
 
 func start_game() -> void:

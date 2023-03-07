@@ -24,7 +24,6 @@ func add_to_board() -> void:
 	Board.add_from_world(global_position, self)
 
 func act() -> void:
-	print('goblin acts')
 	if not astar:
 		astar = Board.get_astar(self)
 
@@ -39,7 +38,6 @@ func act() -> void:
 		var to = path[1]
 
 		var colliders = Board.get_hit_colliders(to, self)
-		print("colliders", colliders)
 		if len(colliders) > 0:
 			for collider in colliders:
 				attack(collider)
@@ -65,7 +63,6 @@ func attack(target: Node2D) -> void:
 		target.take_damage(1.0)
 	
 func _on_Stats_no_health() -> void:
-	print('goblin died')
 	Eventbus.emit_entity_died(self)
 	queue_free()
 

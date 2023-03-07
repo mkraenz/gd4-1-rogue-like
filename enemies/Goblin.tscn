@@ -23,14 +23,18 @@ script = ExtResource("1_46fyr")
 texture = SubResource("AtlasTexture_ory34")
 
 [node name="Shape" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("RectangleShape2D_cqyhf")
 
 [node name="HitDetector" parent="." instance=ExtResource("2_atc5h")]
+visible = false
 collision_mask = 896
 
 [node name="Stats" parent="." instance=ExtResource("3_rsxu8")]
 
 [node name="PlayerDetector" parent="." instance=ExtResource("5_7lcli")]
+visible = false
 
 [node name="Hurtbox" parent="." instance=ExtResource("6_mj7nf")]
+visible = false
 collision_layer = 64
