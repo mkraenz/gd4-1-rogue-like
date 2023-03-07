@@ -23,9 +23,17 @@ func _on_PlayerDetector_player_lost() -> void:
 func add_to_board() -> void:
 	Board.add_from_world(global_position, self)
 
+# for every movable collidable entity (like other goblins), we need to update the astar with the newest positions. This stops goblins from walking through each other.
+func update_astar() -> void:
+	pass
+	# astar.set_point_disabled()
+
 func act() -> void:
 	if not astar:
 		astar = Board.get_astar(self)
+	else:
+		update_astar()
+		Board.update_disabled_astar_points(astar, self)
 
 	if _player:
 		var coords = Grid.to_board_vec(global_position)

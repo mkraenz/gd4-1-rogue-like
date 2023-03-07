@@ -10,7 +10,7 @@ collision_layer = 0
 collision_mask = 12
 script = ExtResource("1_0o7do")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="Shape" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_hb7f2")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

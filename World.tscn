@@ -11,19 +11,22 @@ script = ExtResource("1_3ig6h")
 metadata/_edit_horizontal_guides_ = []
 
 [node name="Player" parent="." instance=ExtResource("2_7mma5")]
-position = Vector2(48, 48)
+position = Vector2(64, 32)
 
 [node name="Goblin" parent="." instance=ExtResource("4_abnwl")]
 position = Vector2(112, 32)
 
 [node name="Goblin2" parent="." instance=ExtResource("4_abnwl")]
-position = Vector2(160, 32)
+position = Vector2(128, 32)
 
 [node name="Wall" parent="." instance=ExtResource("4_gp4h0")]
 position = Vector2(80, 48)
 
 [node name="Wall2" parent="." instance=ExtResource("4_gp4h0")]
-position = Vector2(80, 32)
+position = Vector2(96, 16)
+
+[node name="Wall4" parent="." instance=ExtResource("4_gp4h0")]
+position = Vector2(96, 0)
 
 [node name="Wall3" parent="." instance=ExtResource("4_gp4h0")]
 position = Vector2(80, 16)
@@ -44,6 +47,7 @@ position = Vector2(128, 64)
 position = Vector2(144, 64)
 
 [node name="UI" type="CanvasLayer" parent="."]
+visible = false
 
 [node name="HUD" type="Control" parent="UI"]
 layout_mode = 3

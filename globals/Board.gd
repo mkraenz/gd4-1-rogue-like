@@ -9,7 +9,7 @@ var width := 0
 var height := 0
 
 func _ready() -> void:
-	init(20, 20)
+	init(11, 6)
 
 # initializes the grid with width-many cells in x-direction and height-many cells in y-direction (zero-based)
 func init(_width: int, _height: int) -> void:
@@ -42,6 +42,9 @@ func can_move(from: Vector2, to: Vector2, entity: CollisionObject2D) -> bool:
 
 func is_colliding(at: Vector2, entity: CollisionObject2D) -> bool:
 	for entity_at_target_cell in grid[at]:
+		# don't collide with yourself
+		if entity_at_target_cell == entity:
+			return false
 		var colliding = entity.collision_mask & entity_at_target_cell.collision_layer
 		if colliding:
 			return true
@@ -75,7 +78,7 @@ func get_hit_colliders(at: Vector2, entity: CollisionObject2D) -> Array:
 			if is_hit:
 				colliders.append(entity_at_target_cell)
 		else:
-			prints(entity_at_target_cell.name, ' does not have a Hurtbox node')
+			prints(entity_at_target_cell.name, 'does not have a Hurtbox node')
 	return colliders
 
 
@@ -85,39 +88,67 @@ func reset() -> void:
 func is_out_of_bounds(cell: Vector2) -> bool:
 	return cell.x < 0 or cell.y < 0 or cell.x > width -1 or cell.y > height - 1 
 
-
 # idea: since this depends not on the entity but on the PackedScene of the entity (i.e. is it a Goblin, or a Dwarf), we only need #PackedScenes many astar instances
+# TODO: oh man... maybe it's better to use the board cells as astar vertices and then multiply by the size of the entity to get the global position of the entity
 func get_astar(entity: CollisionObject2D) -> AStar2D:
 	var astar = AStar2D.new()
+
+	var impassable := get_tree().get_nodes_in_group("impassables")
+	var impassable_ids = Fp.map(impassable, func(x): return get_id_from_global_position(x))
+
 	# generate points
 	for x in range(width):
 		for y in range(height):
+			if impassable_ids.has(get_id(x,y)):
+				continue
 			astar.add_point(width * y + x, Vector2(x, y))
 
+	
 	# connect points
 	for x in range(width):
 		for y in range(height):
 			var id = get_id(x,y)
+			if not astar.has_point(id):
+				continue
+
+			var connect_if_point_exists = func(other_id):
+				if astar.has_point(other_id):
+					astar.connect_points(id, other_id)
+		
 			if x == width - 1:
 				# connect to down neighbors
 				if y == height -1:
 					continue
-				astar.connect_points(id, x + width * (y+1))
+				connect_if_point_exists.call(x+ width * (y+1))
 			elif y == height -1:
-				# connect to right neighbors
-				astar.connect_points(id, (x+1) + width * y)
+				connect_if_point_exists.call((x+1) + width * y)
 			else:
 				# connect to right neighbors
-				astar.connect_points(id, (x+1) + width * y)
+				connect_if_point_exists.call((x+1) + width * y)
 				# connect to down neighbors
-				astar.connect_points(id, x + width * (y+1))
+				connect_if_point_exists.call(x + width * (y+1))
+	update_disabled_astar_points(astar, entity)
+	return astar
 
-	# disable where entity would collide with something (e.g. enemy, wall)
+func update_disabled_astar_points(astar: AStar2D, entity: Node2D) -> void:
+	# disable where entity would collide with something (e.g. another enemy) (impassables like walls are already disabled)
 	for x in range(width):
 		for y in range(height):
-			if is_colliding(Vector2(x,y), entity):
-				astar.set_point_disabled(get_id(x,y))
-	return astar
+			if astar.has_point(get_id(x,y)):
+				var disabled = is_colliding(Vector2(x,y), entity)
+				if disabled:
+					printt("disabled", x, y, disabled)
+
+				astar.set_point_disabled(get_id(x,y), false)
+				astar.set_point_disabled(get_id(x,y), disabled)
 
 func get_id(x: int, y: int) -> int:
 	return x + width * y
+
+func get_id_from_vec(vec: Vector2) -> int:
+	return get_id(int(vec.x), int(vec.y))
+
+func get_id_from_global_position(entity: Node2D) -> int:
+	var board_vec = Grid.to_board_vec(entity.global_position)
+	return get_id_from_vec(board_vec)
+	
