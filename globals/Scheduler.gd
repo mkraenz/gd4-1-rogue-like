@@ -37,7 +37,6 @@ func start_game() -> void:
 func end_turn() -> void:
 	# prints(_current_actor().name, ": End turn.")
 	_goto_next()
-	print(_current_actor())
 	# prints(_current_actor().name, ": Start turn.")
 	_act()
 	

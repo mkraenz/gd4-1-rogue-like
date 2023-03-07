@@ -33,8 +33,6 @@ func act() -> void:
 	var target_id = Board.get_id(5, 5)
 
 	path = astar.get_point_path(id, target_id)
-	print(path.size())
-	queue_redraw()
 	# if not path:
 	# 	if astar.are_points_connected(id, target_id):
 

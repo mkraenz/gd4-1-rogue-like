@@ -1,7 +1,6 @@
 extends Node2D
 
 @onready var scheduler = Scheduler
-@onready var tilemap = $TileMap
 @onready var player = $Player
 
 var astar: AStar2D

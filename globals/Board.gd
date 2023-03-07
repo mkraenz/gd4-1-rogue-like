@@ -96,6 +96,9 @@ func get_astar(entity: CollisionObject2D) -> AStar2D:
 	# disable where entity would collide with something (e.g. enemy, wall)
 	for x in range(width):
 		for y in range(height):
+			if x == 5 and y == 1:
+				var cell = grid[Vector2(x,y)]
+				printt(cell, cell[0].collision_layer, entity.collision_mask)
 			if is_colliding(Vector2(x,y), entity):
 				astar.set_point_disabled(get_id(x,y))
 	return astar

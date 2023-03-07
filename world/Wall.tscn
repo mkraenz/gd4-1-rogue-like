@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=3 uid="uid://8vp2orcucyjq"]
+
+[ext_resource type="Script" path="res://world/Wall.gd" id="1_7cgjn"]
+[ext_resource type="Shape2D" uid="uid://ci386wxd804mi" path="res://common/RectCollisionShape.tres" id="1_8drrc"]
+[ext_resource type="Texture2D" uid="uid://02reucbw3ss2" path="res://assets/dirtwalls.png" id="2_p5gcx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hogix"]
+atlas = ExtResource("2_p5gcx")
+region = Rect2(16, 16, 16, 16)
+
+[node name="Wall" type="StaticBody2D"]
+script = ExtResource("1_7cgjn")
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+shape = ExtResource("1_8drrc")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_hogix")
