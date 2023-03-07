@@ -1,0 +1,10 @@
+[gd_resource type="AtlasTexture" load_steps=3 format=3 uid="uid://k8glnu0s73hs"]
+
+[ext_resource type="Texture2D" uid="uid://dqwpame4riq1p" path="res://third-party/kenney-one-bit-pack/colored-transparent.png" id="1_kj4pl"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4syrx"]
+atlas = ExtResource("1_kj4pl")
+region = Rect2(527, 136, 16, 16)
+
+[resource]
+atlas = SubResource("AtlasTexture_4syrx")

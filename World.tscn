@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://c8sng7g0v7ae4"]
+
+[ext_resource type="Script" path="res://World.gd" id="1_3ig6h"]
+[ext_resource type="PackedScene" uid="uid://cbpw4radoiuo8" path="res://player/Player.tscn" id="2_7mma5"]
+[ext_resource type="TileSet" uid="uid://ypqfdt78xjkx" path="res://tileset.tres" id="3_7v5fo"]
+[ext_resource type="PackedScene" uid="uid://b44gof2crr3gf" path="res://enemies/Enemy.tscn" id="4_wypjc"]
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_3ig6h")
+metadata/_edit_horizontal_guides_ = []
+
+[node name="Player" parent="." instance=ExtResource("2_7mma5")]
+position = Vector2(32, 48)
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = ExtResource("3_7v5fo")
+format = 2
+layer_0/tile_data = PackedInt32Array(327684, 65536, 3, 327685, 65536, 3, 327683, 327680, 3, 327682, 0, 2, 262146, 0, 0, 262147, 131072, 0, 327686, 65536, 3, 327687, 65536, 3, 327688, 131072, 3)
+
+[node name="Enemy" parent="." instance=ExtResource("4_wypjc")]
+position = Vector2(112, 48)
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="NavigationRegion2D"]
