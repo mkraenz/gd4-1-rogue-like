@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://c8sng7g0v7ae4"]
+[gd_scene load_steps=6 format=3 uid="uid://c8sng7g0v7ae4"]
 
 [ext_resource type="Script" path="res://World.gd" id="1_3ig6h"]
 [ext_resource type="PackedScene" uid="uid://cbpw4radoiuo8" path="res://player/Player.tscn" id="2_7mma5"]
 [ext_resource type="PackedScene" uid="uid://djyfppb6xhsvy" path="res://enemies/Goblin.tscn" id="4_abnwl"]
 [ext_resource type="PackedScene" uid="uid://8vp2orcucyjq" path="res://world/Wall.tscn" id="4_gp4h0"]
+[ext_resource type="Script" path="res://ui/gameover/GameOver.gd" id="5_hqprn"]
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_3ig6h")
@@ -14,6 +15,9 @@ position = Vector2(48, 48)
 
 [node name="Goblin" parent="." instance=ExtResource("4_abnwl")]
 position = Vector2(112, 32)
+
+[node name="Goblin2" parent="." instance=ExtResource("4_abnwl")]
+position = Vector2(160, 32)
 
 [node name="Wall" parent="." instance=ExtResource("4_gp4h0")]
 position = Vector2(80, 48)
@@ -38,3 +42,34 @@ position = Vector2(128, 64)
 
 [node name="Wall9" parent="." instance=ExtResource("4_gp4h0")]
 position = Vector2(144, 64)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="HUD" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GameOver" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("5_hqprn")
+
+[node name="C" type="CenterContainer" parent="UI/GameOver"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GameOverLabel" type="Label" parent="UI/GameOver/C"]
+layout_mode = 2
+text = "You died."
