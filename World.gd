@@ -2,6 +2,7 @@ extends Node2D
 
 @onready var scheduler = Scheduler
 @onready var tilemap = $TileMap
+@onready var player = $Player
 
 var astar: AStar2D
 
@@ -14,11 +15,11 @@ func _ready() -> void:
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		print('mouse pressed')
-		# queue_redraw()
+		queue_redraw()
 
 func _draw():
 
-	var BASE_LINE_WIDTH = 3.0
+	var BASE_LINE_WIDTH = 1.0
 
 	var enemies = get_tree().get_nodes_in_group("enemies")
 	astar = enemies[0].astar
@@ -30,20 +31,24 @@ func _draw():
 		var neighbors = astar.get_point_connections(point_id)
 		var pos = Grid.to_world_vec(point)
 		if astar.is_point_disabled(point_id):
-			draw_circle(pos, BASE_LINE_WIDTH * 2.0, Color.RED)
+			draw_circle(pos, BASE_LINE_WIDTH, Color.RED)
 		else:
-			draw_circle(pos, BASE_LINE_WIDTH * 2.0, Color.BLUE)
+			draw_circle(pos, BASE_LINE_WIDTH, Color.BLUE)
 			
 		for neighbor in neighbors:
 			var target_pos = Grid.to_world_vec(astar.get_point_position(neighbor))
 			
 			draw_line(pos, target_pos, Color.BLUE, BASE_LINE_WIDTH, true)
 
-	draw_circle(enemies[0].global_position, BASE_LINE_WIDTH * 2.0, Color.GREEN)
-	draw_circle(Grid.to_world_vec(Vector2(5,5)), BASE_LINE_WIDTH * 2.0, Color.GREEN)
+	draw_circle(enemies[0].global_position, BASE_LINE_WIDTH, Color.GREEN)
+	draw_circle(Grid.to_world_vec(Vector2(5,5)), BASE_LINE_WIDTH, Color.GREEN)
 	
 	var goblin_coords = enemies[0].get_board_coord()
-	var path = astar.get_point_path(Board.get_id(goblin_coords.x, goblin_coords.y), Board.get_id(5, 5))
+	var player_coords = player.get_board_coord()
+	var path = astar.get_point_path(
+		Board.get_id(goblin_coords.x, goblin_coords.y), 
+		Board.get_id(player_coords.x,player_coords.y)
+	)
 	var path_in_world_coords = Fp.map(path, func(x): return Grid.to_world_vec(x))
-	draw_polyline(path_in_world_coords, Color.RED, 18.0)
+	draw_polyline(path_in_world_coords, Color.RED, 10.0)
 	

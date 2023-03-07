@@ -78,3 +78,6 @@ func take_damage(damage: float) -> void:
 func _on_no_health() -> void:
 	queue_free()
 	
+
+func get_board_coord() -> Vector2:
+	return Grid.to_board_vec(global_position)
